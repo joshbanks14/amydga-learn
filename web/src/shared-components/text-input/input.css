@@ -28,7 +28,7 @@
 .field.active input + label {
   top: 4px;
   opacity: 1;
-  color: #512da8;
+  color: rgb(23, 50, 255);
 }
 
 .field.locked {

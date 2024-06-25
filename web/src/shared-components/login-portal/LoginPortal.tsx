@@ -7,10 +7,21 @@ export const LoginPortal = () => {
       <div className={styles.loginPortal}>
         <div className={styles.title}>Welcome Back.</div>
         <div className={styles.emailInput}>
-          <Input locked={false} active={false} label="Email Address" />
+          <Input
+            id="email"
+            locked={false}
+            active={false}
+            label="Email Address"
+          />
         </div>
         <div className={styles.passwordInput}>
-          <Input locked={false} active={false} label="Password" />
+          <Input
+            id="password"
+            locked={false}
+            active={false}
+            label="Password"
+            isPassword={true}
+          />
         </div>
         <div className={styles.forgotPassword}>
           <label style={{ color: "white", cursor: "pointer" }}>
