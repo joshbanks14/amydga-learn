@@ -1,12 +1,7 @@
-import styles from "./App.module.css";
-import { Login } from "./pages/login";
+import Desktop from "./desktop";
 
 function App() {
-  return (
-    <div className={styles.App}>
-      <Login />
-    </div>
-  );
+  return <Desktop />;
 }
 
 export default App;
