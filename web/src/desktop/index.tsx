@@ -1,4 +1,4 @@
-import styles from "./App.module.css";
+import styles from "./index.module.css";
 import { Login } from "./pages/login";
 
 function Desktop() {
