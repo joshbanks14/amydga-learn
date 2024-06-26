@@ -7,8 +7,9 @@ type InputProps = {
   locked: boolean;
   active: boolean;
   errorMessage?: string;
-  validate?: (input: string) => boolean;
   isPassword?: boolean;
+  value: string;
+  setValue: (value: string) => void;
 };
 
 export const Input = ({
@@ -17,11 +18,11 @@ export const Input = ({
   locked,
   active,
   errorMessage,
-  validate,
   isPassword = false,
+  value = "",
+  setValue,
 }: InputProps) => {
   const [state, setState] = useState<boolean>(active);
-  const [value, setValue] = useState("");
 
   const fieldClassName = `field ${
     (locked ? state : state || value) && "active"

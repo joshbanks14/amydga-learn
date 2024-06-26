@@ -8,11 +8,8 @@ export const Login = () => {
   return (
     <>
       <div className={styles.login}>
-        <div className={styles.content}>
-          {pageType === "login" && <LoginPortal />}
-          {pageType === "signup" && <SignupPortal />}
-        </div>
-        <div className={styles.branding}></div>
+        {pageType === "login" && <LoginPortal />}
+        {pageType === "signup" && <SignupPortal />}
       </div>
     </>
   );
