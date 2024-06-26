@@ -59,3 +59,19 @@
   font-family: "roboto";
   cursor: pointer;
 }
+
+.errorMessageActive {
+  margin-top: 15px;
+  color: rgb(251, 156, 156);
+  font-size: 12px;
+  opacity: 1;
+  transition: opacity 200ms;
+}
+
+.errorMessageInactive {
+  margin-top: 15px;
+  color: rgb(251, 156, 156);
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 200ms;
+}

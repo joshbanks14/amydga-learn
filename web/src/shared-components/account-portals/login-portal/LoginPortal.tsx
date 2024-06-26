@@ -2,11 +2,40 @@ import { useState } from "react";
 import { usePortal } from "../../../context/portalContext";
 import { Input } from "../../text-input/input";
 import styles from "../Portal.module.css";
+import { useAuthHelper } from "../../../firebase/auth";
+import { UserCredential } from "firebase/auth";
+import { useAuth } from "../../../context/authContext";
 
 export const LoginPortal = () => {
   const { setPageType } = usePortal();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showError, setShowError] = useState(false);
+
+  const { doSignInWithEmailAndPassword } = useAuthHelper();
+  const { setCurrentUser, setUserLoggedIn } = useAuth();
+
+  const onSubmit = () => {
+    doSignInWithEmailAndPassword(email, password)
+      .then((user: UserCredential) => {
+        setCurrentUser(user);
+        setUserLoggedIn(true);
+      })
+      .catch((error: any) => {
+        handleErrorMessage();
+      });
+  };
+
+  const handleErrorMessage = () => {
+    setShowError(true);
+    const errorTimeout = setTimeout(() => {
+      setShowError(false);
+    }, 3000);
+    return () => {
+      clearTimeout(errorTimeout);
+    };
+  };
+
   return (
     <>
       <div className={styles.portal}>
@@ -42,7 +71,16 @@ export const LoginPortal = () => {
             Forgotten password?
           </label>
         </div>
-        <button className={styles.submitButton}>Login</button>
+        <button className={styles.submitButton} onClick={onSubmit}>
+          Login
+        </button>
+        <label
+          className={
+            showError ? styles.errorMessageActive : styles.errorMessageInactive
+          }
+        >
+          The email and password provided do not match. Please try again!
+        </label>
         <label className={styles.signup} onClick={() => setPageType("signup")}>
           Need an account? Sign up here.
         </label>

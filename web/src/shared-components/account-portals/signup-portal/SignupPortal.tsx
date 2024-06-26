@@ -2,52 +2,45 @@ import { useState } from "react";
 import { usePortal } from "../../../context/portalContext";
 import { Input } from "../../text-input/input";
 import styles from "../Portal.module.css";
+import {
+  emailValidator,
+  passwordValidator,
+  passwordsMatchChecker,
+} from "./signup-validation";
+import { useAuthHelper } from "../../../firebase/auth";
+import { UserCredential } from "firebase/auth";
+import { useAuth } from "../../../context/authContext";
 
 export const SignupPortal = () => {
   const { setPageType } = usePortal();
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [passwordConfirmError, setPasswordConfirmError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const isPasswordValid = (password: string) => {
-    const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*]/.test(password);
-
-    if (password.length < minLength) {
-      setPasswordError(
-        `Password must be at least ${minLength} characters long.`
-      );
-      return false;
-    }
-    if (!hasUpperCase) {
-      setPasswordError("Password must contain at least one uppercase letter.");
-      return false;
-    }
-    if (!hasLowerCase) {
-      setPasswordError("Password must contain at least one lowercase letter.");
-      return false;
-    }
-    if (!hasNumber) {
-      setPasswordError("Password must contain at least one number.");
-      return false;
-    }
-    if (!hasSpecialChar) {
-      setPasswordError(
-        "Password must contain at least one special character (!@#$%^&*)."
-      );
-      return false;
-    }
-    setPasswordError("");
-    return true;
-  };
+  const { doCreateUserWithEmailAndPassword } = useAuthHelper();
+  const { setCurrentUser, setUserLoggedIn } = useAuth();
 
   const onSubmit = () => {
-    if (isPasswordValid(password)) {
-      console.log("Error!");
+    const { isValid: isPasswordValid, message: passwordMessage } =
+      passwordValidator(password);
+    const { isValid: isEmailValid, message: emailMessage } =
+      emailValidator(email);
+    const doPasswordsMatch = passwordsMatchChecker(password, passwordConfirm);
+
+    setPasswordError(passwordMessage);
+    setEmailError(emailMessage);
+    setPasswordConfirmError(doPasswordsMatch ? "" : "Passwords do not match!");
+
+    if (isPasswordValid && isEmailValid && doPasswordsMatch) {
+      doCreateUserWithEmailAndPassword(email, password).then(
+        (user: UserCredential) => {
+          setCurrentUser(user);
+          setUserLoggedIn(true);
+        }
+      );
     }
   };
 
@@ -81,6 +74,18 @@ export const SignupPortal = () => {
             errorMessage={passwordError}
             value={password}
             setValue={setPassword}
+          />
+        </div>
+        <div className={styles.passwordInput}>
+          <Input
+            id="passwordconfirm"
+            locked={false}
+            active={false}
+            label="Confirm Password"
+            isPassword={true}
+            errorMessage={passwordConfirmError}
+            value={passwordConfirm}
+            setValue={setPasswordConfirm}
           />
         </div>
         <button className={styles.submitButton} onClick={onSubmit}>

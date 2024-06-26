@@ -4,8 +4,8 @@ import { useWindowDimensions } from "./shared-components/window-dimensions/use-w
 
 function App() {
   const { width } = useWindowDimensions();
-
   const isDesktop = width >= 1095;
+
   return <>{isDesktop ? <Desktop /> : <Mobile />}</>;
 }
 
